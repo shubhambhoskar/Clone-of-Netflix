@@ -1,0 +1,262 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+  </head>
+  <style>
+    * {
+      background-color: black;
+      color: white;
+    }
+    #movies {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      grid-template-rows: auto;
+      font-weight: bold;
+      text-align: center;
+      width: 85%;
+      margin: auto;
+      gap: 25px;
+      margin-top: 30px;
+      grid-template-columns: repeat(auto-fit,  minmax(min-content,300px));
+      align-items: center;
+      justify-content: center;
+    }
+    #movies > div {
+      box-shadow: rgba(136, 165, 191, 0.48) 6px 2px 16px 0px,
+        rgba(52, 1, 1, 0.8) -6px -2px 16px 0px;
+      border-radius: 10px;
+    }
+    #movies > div > img {
+      width: 100%;
+      height: 320px;
+      border-radius: 10px 10px 3px 3px;
+    }
+    #movies > div > div {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      margin-top: -20px;
+    }
+    #movies > div > div img {
+      width: 8%;
+      margin-right: 5px;
+    }
+    #movies > div > div p {
+      font-weight: bold;
+      margin-right: 5px;
+    }
+    #find {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    #btn {
+      background-color: rgb(229, 9, 20);
+      color: white;
+      padding: 10px 10px;
+      border-radius: 10px;
+      font-weight: bold;
+      margin-left: 10px;
+      border: 1px solid white;
+    }
+    #search {
+      background-color: black;
+      border-radius: 10px;
+      padding: 10px 10px;
+      color: white;
+      font-weight: bold;
+      border: 1px solid rgb(255, 246, 246);
+    }
+    #rating {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+    }
+    #sorting {
+      padding: 10px;
+      color: white;
+      font-weight: bold;
+      font-size: 18px;
+      margin-right: 100px;
+    }
+    #navbar {
+      display: flex;
+      justify-content: space-evenly;
+      align-items: center;
+      margin-bottom: 40px;
+      margin-top: 20px;
+    }
+    #logo {
+      width: 30%;
+      display: flex;
+      justify-content: start;
+      align-items: center;
+    }
+    #logo > a > img {
+      width: 25%;
+    }
+    @media all and (min-width: 250px) and (max-width: 800px) {
+      #navbar {
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+      }
+      #searching1 > div {
+        display: flex;
+        flex-direction: column-reverse;
+        align-items: center;
+        justify-content: center;
+      }
+      #searching1 {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        width: 95%;
+      }
+      #search {
+        width: 100%;
+      }
+      #btn {
+        width: min-content;
+      }
+      #rating {
+        width: auto;
+      }
+      #sorting {
+        margin: auto;
+        margin-top: 25px;
+      }
+      #logo {
+        width: auto;
+        margin: auto;
+        margin-bottom: 30px;
+      }
+      #logo > a > img {
+        width: 25%;
+        display: block;
+        margin: auto;
+      }
+    }
+  </style>
+  <body>
+    <div id="navbar">
+      <div id="logo">
+        <a href="index.html"><img src="https://iili.io/joLARR.jpg" alt="" /></a>
+      </div>
+
+      <div id="searching1">
+        <div id="rating">
+          <select name="" id="sorting">
+            <option value="default">Rating</option>
+            <option value="LH">Low To High</option>
+            <option value="HL">High To Low</option>
+          </select>
+
+          <div id="find">
+            <input type="text" id="search" placeholder="Enter Movie Name" />
+            <button type="submit" id="btn" onclick="inputdata()">Search</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div id="slideshow"></div>
+
+    <div id="movies"></div>
+  </body>
+</html>
+<script>
+  
+  let keepdata;
+  function inputdata() {
+    event.preventDefault();
+    let image = document.createElement("img");
+    let search = document.querySelector("#search").value;
+    let url = "https://www.omdbapi.com/?apikey=376f49e0&s=";
+    if (search === "") {
+      url += "Avengers";
+    } else {
+      url += search;
+    }
+    async function getdata() {
+      try {
+        let res = await fetch(url);
+        let data = await res.json();
+        keepdata = data.Search;
+        console.log(keepdata.Search);
+        adding(data.Search);
+      } catch (error) {
+        console.log(error);
+        img.src =
+          "https://webdesignretainer.com/blog/wp-content/uploads/2018/06/Stickermule-creative-404-design.png";
+      }
+    }
+    getdata();
+  }
+
+  let url = "https://www.omdbapi.com/?apikey=376f49e0&s=thor";
+
+  async function getdata() {
+    try {
+      let res = await fetch(url);
+      let data = await res.json();
+      keepdata = data.Search;
+      adding(data.Search);
+    } catch (error) {
+      console.log(error);
+    }
+  }
+  getdata();
+  function adding(data) {
+    let conatiner = document.querySelector("#movies");
+    conatiner.innerHTML = null;
+    data.map(function (ele) {
+      let img = document.createElement("img");
+      img.src = ele.Poster;
+      let name = document.createElement("p");
+      name.innerText = ele.Title;
+      let date = document.createElement("p");
+      date.innerText = ele.Year;
+      let rating = document.createElement("p");
+      rating.innerText = (Math.random() * 10).toFixed(2);
+
+      let logo = document.createElement("img");
+      logo.src = "https://img.icons8.com/emoji/2x/star-emoji.png";
+
+      let ratingdiv = document.createElement("div");
+      ratingdiv.append(logo, rating);
+
+      let box = document.createElement("div");
+      box.append(img, name, date, ratingdiv);
+      conatiner.append(box);
+    });
+  }
+
+  let sorting = document.getElementById("sorting");
+  sorting.addEventListener("change", function () {
+    sortbyyear(keepdata);
+  });
+
+  function sortbyyear(keepdata) {
+    if (sorting.value === "LH") {
+      keepdata.sort(function (a, b) {
+        return +a.Year - +b.Year;
+      });
+      adding(keepdata);
+    }
+    if (sorting.value === "HL") {
+      keepdata.sort(function (a, b) {
+        return +b.Year - +a.Year;
+      });
+      adding(keepdata);
+    }
+    if (sorting.value === "default") {
+      adding(keepdata);
+    }
+  }
+</script>
